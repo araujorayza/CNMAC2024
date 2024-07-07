@@ -14,8 +14,10 @@ dh{1} = @(x1,x2) [ 2.*x1/50,  2.*x2/50];
 dh{2} = @(x1,x2) [-2.*x1/50, -2.*x2/50];
 
 G=[1];
-b=0.35;
-l=0.2;
+% b=0.35;
+% l=0.2;
+lambda=0.1;
+% l=0.15
 
 Rset=1:n;
 
@@ -28,10 +30,11 @@ for j=G
     R{j} = sdpvar(n,n,'full');
     L{j} = sdpvar(n,n,'full');
 end
-sdpvar lambda
+
+sdpvar l
 for j=Rset
     for k=G
-        Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}',   (P{k}-L{k}'+R{k}*A{j})', zeros(n,1);
+        Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}'+lambda*P{k},   (P{k}-L{k}'+R{k}*A{j})', zeros(n,1);
                         P{k}-L{k}'+R{k}*A{j},        -R{k}-R{k}', zeros(n,1);
                         zeros(1,n), zeros(1,n), -lambda*l];
         LMIS = [LMIS, Upsilon{k,j} <= 0];
@@ -73,6 +76,7 @@ if p > 0
         R{k} = double(R{k})
         L{k} = double(L{k})
         lambda = double(lambda)
+        l=double(l)
     end
 else
     display('Infeasible')
@@ -107,7 +111,7 @@ hold on
 [~,d]=contour(X,Y,De,[0,fix(max(max(De))*1e2)/1e2],'b','ShowText','on','DisplayName','D')
 legend;
 %from the graph
-l = 0.175;
+%l = 0.175;
 
 
 
