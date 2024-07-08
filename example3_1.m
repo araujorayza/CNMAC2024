@@ -14,10 +14,7 @@ dh{1} = @(x1,x2) [ 2.*x1/50,  2.*x2/50];
 dh{2} = @(x1,x2) [-2.*x1/50, -2.*x2/50];
 
 G=[1];
-% b=0.35;
-% l=0.2;
-lambda=0.1;
-% l=0.15
+
 
 Rset=1:n;
 
@@ -31,7 +28,14 @@ for j=G
     L{j} = sdpvar(n,n,'full');
 end
 
-sdpvar l
+% b=0.35;
+% l=0.2;
+
+lambda=.8;
+l=0.3
+% l=0.15
+% sdpvar l
+
 for j=Rset
     for k=G
         Upsilon{k,j} = [L{k}*A{j}+A{j}'*L{k}'+lambda*P{k},   (P{k}-L{k}'+R{k}*A{j})', zeros(n,1);
